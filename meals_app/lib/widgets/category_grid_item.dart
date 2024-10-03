@@ -11,13 +11,36 @@ class CategoryGridItem extends StatelessWidget {
   final Category category;
   final void Function() onSelectCategory;
 
+  int get _available => category.getNumMealsVisibleInCategory();
+  bool get _anyMeals => _available > 0;
+  String get _availableMsg => "${_anyMeals ? _available : "None"} available";
+  int get _displayTextAlpha => _anyMeals ? 255 : 200;
+  List<Color> get _displayGradient {
+    if (_anyMeals) {
+      return [
+        category.color.withOpacity(0.55),
+        category.color.withOpacity(0.9)
+      ];
+    }
+    return [
+      Colors.grey.shade600.withOpacity(0.55),
+      Colors.grey.shade600.withOpacity(0.55)
+    ];
+  }
+
+  void _tryOpenCategory() {
+    if (_anyMeals) {
+      onSelectCategory();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // InkWell is a rectangular area of (Material app) that responds to touch.
     // Also gives feedback! GestureDetector does not give nice feedback.
     return InkWell (
       // Back arrow is added automatically by flutter, not by us.
-      onTap: onSelectCategory,
+      onTap: _tryOpenCategory,
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(16),
       child: Container(
@@ -25,10 +48,7 @@ class CategoryGridItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [
-              category.color.withOpacity(0.55),
-              category.color.withOpacity(0.9),
-            ],
+            colors: _displayGradient,
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -38,13 +58,13 @@ class CategoryGridItem extends StatelessWidget {
             Text(
               category.title,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(_displayTextAlpha),
               ),
             ),
             Align(
               alignment: Alignment.bottomRight,
               child: Text(
-                "${category.getNumMealsVisibleInCategory()} available",
+                _availableMsg,
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
                   color: Theme.of(context).colorScheme.onSurface.withAlpha(200),
                 ),
