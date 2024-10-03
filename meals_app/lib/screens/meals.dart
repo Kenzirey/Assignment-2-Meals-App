@@ -12,7 +12,7 @@ class MealsScreen extends StatelessWidget {
   });
 
   final String? title;
-  final List<Meal> meals;
+  final Set<Meal> meals;
   final void Function(Meal meal) onToggleFavorite;
 
   void selectMeal(BuildContext context, meal) {
@@ -32,7 +32,7 @@ class MealsScreen extends StatelessWidget {
         // Important to tell Flutter how many you want to display.
         itemCount: meals.length,
         itemBuilder: (ctx, index) => MealItem(
-              meal: meals[index],
+              meal: meals.elementAt(index),
               onSelectMeal: (meal) {
                 selectMeal(context, meal);
               },

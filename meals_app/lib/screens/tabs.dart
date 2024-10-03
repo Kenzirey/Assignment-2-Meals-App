@@ -19,7 +19,7 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageIndex = 0;
-  final List<Meal> _favoriteMeals = [];
+  final Set<Meal> _favoriteMeals = {};
 
   /// Show an info message when user adds or removes a favorite.
   void _showInfoMessage(String message) {
@@ -72,13 +72,8 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableMeals = dummyMeals
-      .where((meal) => FilterProvider.isFiltered(meal.mealFilterProperties))
-      .toList();
-
     Widget activePage = CategoriesScreen(
-      onToggleFavorite: _toggleMealFavoriteStatus,
-      availableMeals: availableMeals,
+      onToggleFavorite: _toggleMealFavoriteStatus
     );
     var activePageTitle = 'Categories';
 

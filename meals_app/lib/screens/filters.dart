@@ -20,10 +20,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   @override
   initState() {
+    // Setting up a copy of the filters for comparison to see
+    // if anything has changed.
     oldFilters = FilterProvider.currentFilters.toSet();
     super.initState();
   }
 
+  // Creates toggle buttons for all available filters.
   Widget _filterButtons() {
     return Column(
       children: [

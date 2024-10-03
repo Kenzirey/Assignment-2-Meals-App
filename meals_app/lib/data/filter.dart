@@ -1,3 +1,4 @@
+/// Conditions that can be used to filter out specific meals
 enum Filter {
   glutenFree(
     "Gluten Free",
@@ -19,5 +20,9 @@ enum Filter {
   final String title;
   final String? subtitle;
 
+  /// Creates a new filter with a title and an optional subtitle.
+  ///
+  /// [title] should be the name of the filter itself, whilst the [subtitle] should be a brief
+  /// description thereof.
   const Filter(this.title, this.subtitle);
 }
