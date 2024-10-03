@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meals_app/data/filter.dart';
 import 'package:meals_app/providers/filter_provider.dart';
@@ -15,6 +16,13 @@ class FiltersScreen extends StatefulWidget {
 
 class _FiltersScreenState extends State<FiltersScreen> {
   bool didChange = false;
+  Set<Filter> oldFilters = {};
+
+  @override
+  initState() {
+    oldFilters = FilterProvider.currentFilters.toSet();
+    super.initState();
+  }
 
   Widget _filterButtons() {
     return Column(
@@ -29,7 +37,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 } else {
                   FilterProvider.removeFilter(filter);
                 }
-                didChange = true;
+
+                // Performing an in-depth check to minimize state refreshes.
+                // If the end result is that nothing has changed, a state refresh shouldn't happen.
+                if (setEquals(FilterProvider.currentFilters, oldFilters)) {
+                  didChange = false;
+                } else {
+                  didChange = true;
+                }
               });
             },
             title: Text(
