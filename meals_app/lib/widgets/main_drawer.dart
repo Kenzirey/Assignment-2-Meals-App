@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// A drawer navigation widget.
+///
+/// Allows users to navigate between different screens through the
+/// navigation drawer.
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key, required this.onSelectScreen});
 
@@ -10,6 +14,7 @@ class MainDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
+          /// Header of the drawer, with title and icon.
           DrawerHeader(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -42,6 +47,7 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           // ListTile is optimized for outputting items in a list (inside a row)
+          /// Directs users to the "Meals" screen.
           ListTile(
             leading: Icon(
               Icons.restaurant,
@@ -60,6 +66,7 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           const SizedBox(height: 6),
+          /// Directs users to the "Filters" screen.
           ListTile(
             leading: Icon(
               Icons.settings,

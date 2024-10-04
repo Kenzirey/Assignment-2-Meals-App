@@ -1,20 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/data/filter.dart';
 import 'package:meals_app/providers/filter_provider.dart';
-/* import 'package:meals_app/screens/tabs.dart';
-import 'package:meals_app/widgets/main_drawer.dart'; */
 
-class FiltersScreen extends StatefulWidget {
+/// Allows the user to toggle on/off filters that affect which meals will be shown.
+/// Keeps track of changes by the user, to dynamically update the list of applied filters,
+/// through the use of Riverpod.
+class FiltersScreen extends ConsumerStatefulWidget {
   const FiltersScreen({super.key});
 
+
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<FiltersScreen> createState() {
     return _FiltersScreenState();
   }
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
+/// The state for [FiltersScreen], which manages the user's interaction with the filters.
+/// 
+/// Keeps track of which filters are currently enabled or disabled.
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   bool didChange = false;
   Set<Filter> oldFilters = {};
 
@@ -22,32 +28,33 @@ class _FiltersScreenState extends State<FiltersScreen> {
   initState() {
     // Setting up a copy of the filters for comparison to see
     // if anything has changed.
-    oldFilters = FilterProvider.currentFilters.toSet();
+    oldFilters = ref.read(filterProvider).toSet();
     super.initState();
   }
 
   // Creates toggle buttons for all available filters.
   Widget _filterButtons() {
+
+    final currentFilters = ref.watch(filterProvider);  // Listen to changes.
+    final filterNotifier = ref.read(filterProvider.notifier);  // Access to update the filters.
+
     return Column(
       children: [
         for (Filter filter in FilterProvider.availableFilters)
           SwitchListTile(
-            value: FilterProvider.isOn(filter),
+            value: currentFilters.contains(filter),
             onChanged: (bool isChecked) {
               setState(() {
                 if (isChecked) {
-                  FilterProvider.addFilter(filter);
+                  filterNotifier.addFilter(filter);
                 } else {
-                  FilterProvider.removeFilter(filter);
+                  filterNotifier.removeFilter(filter);
                 }
 
                 // Performing an in-depth check to minimize state refreshes.
                 // If the end result is that nothing has changed, a state refresh shouldn't happen.
-                if (setEquals(FilterProvider.currentFilters, oldFilters)) {
-                  didChange = false;
-                } else {
-                  didChange = true;
-                }
+                // Compare current filters to old filters to detect changes
+                didChange = !setEquals(currentFilters, oldFilters);
               });
             },
             title: Text(
@@ -77,12 +84,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
       appBar: AppBar(
         title: const Text('Filters'),
       ),
-      /* drawer: MainDrawer(onSelectScreen: (identifier) {
-        Navigator.of(context).pop();
-        if (identifier == 'meals') {
-          Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const TabsScreen(),),);
-        }
-      }), */
       body: PopScope(
         canPop: false,
         onPopInvokedWithResult: (bool didPop, dynamic result) {
