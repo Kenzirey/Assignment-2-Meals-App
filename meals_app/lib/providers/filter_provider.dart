@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/data/filter.dart';
+import 'package:meals_app/persistence/filter_persistency.dart';
 
 /// Provides access to the filter provider. (Riverpod)
 final filterProvider =
@@ -21,7 +22,13 @@ class FilterProvider extends StateNotifier<Set<Filter>> {
   };
 
   // 🤷‍♂️🤷‍♀️
-  FilterProvider() : super({});
+  FilterProvider() : super({}) {
+    loadFromPersistence();
+  }
+
+  void loadFromPersistence() async {
+    state = await filterPersistency.load();
+  }
 
   /// Keeps track of which filters are currently active
   static final Set<Filter> currentFilters = {};
@@ -31,6 +38,7 @@ class FilterProvider extends StateNotifier<Set<Filter>> {
   /// See [Set.add]
   void addFilter(Filter newFilter) {
     state = {...state, newFilter};
+    filterPersistency.save(state);
   }
 
   /// Removes a filter from the filter provider.
@@ -39,6 +47,12 @@ class FilterProvider extends StateNotifier<Set<Filter>> {
   /// See [Set.remove]
   void removeFilter(Filter removedFilter) {
     state = state.where((item) => item != removedFilter).toSet();
+    filterPersistency.save(state);
+  }
+
+  /// Overwrites the current filters of the filter provider with [filters]
+  void setFilters(Set<Filter> filters) {
+    state = filters;
   }
 
   /// Checks if [filter] is currently applied.
