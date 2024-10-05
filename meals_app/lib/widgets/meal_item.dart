@@ -3,6 +3,8 @@ import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/widgets/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+/// Displays a meal item as a clickable card with visual feedback.
+/// Also displays the traits of a meal.
 class MealItem extends StatelessWidget {
   const MealItem({
     super.key,

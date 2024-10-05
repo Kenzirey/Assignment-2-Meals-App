@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/providers/meal_provider.dart';
 
 class Category {
@@ -14,7 +15,7 @@ class Category {
 
   /// Gets the amount of meals that are currently visible in the category,
   /// after applying filters.
-  int getNumMealsVisibleInCategory() {
-    return MealProvider.getFilteredMealsInCategory(id).length;
+  int getNumMealsVisibleInCategory(WidgetRef ref) {
+    return MealProvider.getFilteredMealsInCategory(ref,id).length;
   }
 }

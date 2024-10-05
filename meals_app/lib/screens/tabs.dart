@@ -1,43 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/providers/favorites_provider.dart';
+import 'package:meals_app/providers/meal_provider.dart';
 import 'package:meals_app/screens/categories.dart';
 import 'package:meals_app/screens/filters.dart';
 import 'package:meals_app/screens/meals.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 
-class TabsScreen extends StatefulWidget {
+/// Widget that manages tabbed screen navigation.
+/// Allows user to switch between "Favorites"- and "Categories" screen,
+/// through a bottom navigation bar.
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() {
+  ConsumerState<TabsScreen> createState() {
     return _TabsScreenState();
   }
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+/// The state for [TabsScreen].
+///
+/// Manages currently selected tab,
+/// while updating UI to show the corresponding screen.
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedPageIndex = 0;
-
-  /// Show an info message when user adds or removes a favorite.
-  void _showInfoMessage(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
 
   @override
   void initState() {
-    FavoritesProvider.subscribe((bool wasAdded) {
-      const String addedMsg = 'Meal added to favorites';
-      const String removedMsg = 'Meal removed from favorites';
-      String infoMessage = wasAdded ? addedMsg : removedMsg;
-      _showInfoMessage(infoMessage);
-      // State needs to be reset in order to reflect the changes
-      // when removing from favorites while in the favorites tab.
-      setState(() {});
-    });
     super.initState();
   }
 
@@ -65,12 +55,24 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = CategoriesScreen();
+    // Access all meals (currently from dummy data) via the meal provider.
+    final allMeals = ref.watch(mealsProvider);
+    // Access the favorite meals via the favorites provider (riverpod).
+    final favoriteMealIds = ref.watch(favoritesProvider);
+
+
+    // Map meal IDs to actual Meal objects using the meals list from mealProvider.
+    final favoriteMeals = allMeals.where((meal) {
+      return favoriteMealIds.contains(meal.id);
+    }).toList();
+
+
+    Widget activePage = const CategoriesScreen();
     var activePageTitle = 'Categories';
 
     if (_selectedPageIndex == 1) {
       activePage = MealsScreen(
-        meals: FavoritesProvider.getFavorites(),
+        meals: favoriteMeals,
       );
       activePageTitle = 'Favorites';
     }

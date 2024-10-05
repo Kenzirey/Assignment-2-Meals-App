@@ -3,6 +3,9 @@ import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/screens/meal_details.dart';
 import 'package:meals_app/widgets/meal_item.dart';
 
+/// Screen for displaying a list of selectable meals.
+///
+/// Allows user to choose a meal from a specific category.
 class MealsScreen extends StatelessWidget {
   const MealsScreen({
     super.key,
@@ -13,6 +16,8 @@ class MealsScreen extends StatelessWidget {
   final String? title;
   final List<Meal> meals;
 
+  /// Handles the navigation to the [MealDetailsScreen],
+  /// when a user taps on a [Meal].
   void selectMeal(BuildContext context, meal) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -25,6 +30,7 @@ class MealsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Listview: scrolling widget, optimized for a list of column items.
     Widget content = ListView.builder(
         // Important to tell Flutter how many you want to display.
         itemCount: meals.length,
