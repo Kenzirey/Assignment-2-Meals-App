@@ -38,7 +38,7 @@ class MainDrawer extends StatelessWidget {
                   width: 16,
                 ),
                 Text(
-                  'Cooking up some kids',
+                  'Meals app',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                       ),

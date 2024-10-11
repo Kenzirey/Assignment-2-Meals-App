@@ -7,7 +7,7 @@ import 'package:meals_app/models/meal.dart';
 const availableCategories = [
   Category(
     id: 'c1',
-    title: 'Dainty',
+    title: 'Italian',
     color: Colors.purple,
   ),
   Category(
