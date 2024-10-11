@@ -47,7 +47,7 @@ class MealsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'No Meals!',
+              'No Meals Added!',
               style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
@@ -56,7 +56,7 @@ class MealsScreen extends StatelessWidget {
               height: 16,
             ),
             Text(
-              'Try Selecting a different category',
+              'Try Adding a Meal to Favorites',
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
